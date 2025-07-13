@@ -14,29 +14,25 @@ on:
         type: string
 
 env:
-  AWS_REGION: us-east-1  # Change to reflect your Region
+  AWS_REGION: us-east-1  # Region-wide setting
 
 permissions:
-  id-token: write   # Required for requesting the JWT
-  contents: read    # Required for actions/checkout
+  id-token: write
+  contents: read
 
 jobs:
   Build_docker_image:
     runs-on: self-hosted
     defaults:
       run:
-        shell: powershell  # Set shell to PowerShell
+        shell: powershell
 
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v4
 
-      - name: Set IMAGE_TAG environment variable
+      - name: Set and build Docker image with tag
         run: |
           $buildTag = "${{ github.event.inputs.BUILD_TAG }}"
-          echo "IMAGE_TAG=$buildTag" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          Write-Host "Docker image tag will be: $buildTag"
-
-      - name: Build Docker image
-        run: |
-          docker build -t testapp:$env:IMAGE_TAG .
+          echo "Using Docker tag: $buildTag"
+          docker build -t testapp:$buildTag .
