@@ -31,7 +31,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t testapp:$BUILD_TAG .
+          echo "IMAGE_TAG=${BUILD_TAG}" >> $GITHUB_ENV
+          docker build -t testapp:${{ env.IMAGE_TAG }} .
           
 
 
