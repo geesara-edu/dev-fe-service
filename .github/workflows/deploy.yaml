@@ -15,6 +15,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
+  BUILD_TAG: ${{ github.event.inputs.BUILD_TAG || 'latest' }}
 
 permissions:
   id-token: write
@@ -31,12 +32,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Docker image with tag from input
+      - name: Build Docker image
         run: |
-          $buildTag = "${{ github.event.inputs.BUILD_TAG }}"
-          if (-not $buildTag) {
-            Write-Error "BUILD_TAG input not set!"
-            exit 1
-          }
-          Write-Host "Using Docker tag: $buildTag"
-          docker build -t testapp:$buildTag .
+          Write-Host "Using Docker tag: $env:BUILD_TAG"
+          docker build -t testapp:$env:BUILD_TAG .
