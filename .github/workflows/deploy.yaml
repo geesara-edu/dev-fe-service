@@ -9,12 +9,12 @@ on:
     inputs:
       BUILD_TAG:
         required: true
-        description: 'enter build tag'
+        description: 'Enter build tag'
         default: "1.00"
         type: string
 
 env:
-  AWS_REGION: us-east-1  # Region-wide setting
+  AWS_REGION: us-east-1
 
 permissions:
   id-token: write
@@ -28,11 +28,15 @@ jobs:
         shell: powershell
 
     steps:
-      - name: Git clone the repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set and build Docker image with tag
+      - name: Build Docker image with tag from input
         run: |
           $buildTag = "${{ github.event.inputs.BUILD_TAG }}"
-          echo "Using Docker tag: $buildTag"
+          if (-not $buildTag) {
+            Write-Error "BUILD_TAG input not set!"
+            exit 1
+          }
+          Write-Host "Using Docker tag: $buildTag"
           docker build -t testapp:$buildTag .
