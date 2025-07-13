@@ -16,7 +16,6 @@ on:
         type: string
 
 env:
-  
   AWS_REGION : us-east-1 #Change to reflect your Region
 
 # Permission can be added at job level or workflow level    
@@ -29,6 +28,11 @@ jobs:
     steps:
       - name: Git clone the repository
         uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: |
+          docker build -t testapp:$BUILD_TAG .
+          
 
 
   
