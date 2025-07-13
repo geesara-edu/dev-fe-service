@@ -31,8 +31,8 @@ jobs:
 
       - name: Build Docker image
         run: |
-          BUILD_TAG="${{ github.event.inputs.BUILD_TAG || format('{0}', steps.date.outputs.date) }}"
-          echo "IMAGE_TAG=${BUILD_TAG}" >> $GITHUB_ENV # <--- This line
+          $buildTag = "${{ github.event.inputs.BUILD_TAG }}"
+          echo "IMAGE_TAG=$buildTag" >> $env:GITHUB_ENV
           echo "Docker image tag will be: $BUILD_TAG"
           docker build -t testapp:${{ env.IMAGE_TAG }} .
           
